@@ -146,17 +146,4 @@ npm start
 - **Payment Processing**
 - **Order History & Tracking**
 
----
-
-## 🚀 Deployment
-- **Frontend:** Vercel/Netlify
-- **Backend:** Render/Heroku
-- **Database:** PlanetScale/AWS RDS
-
----
-
-## 📧 Contact & Contributions
-Want to contribute? Fork the repo and create a pull request!
-
-📩 Email: your-email@example.com
 
