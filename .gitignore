@@ -12,12 +12,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Uploads
-backend/uploads/
-
-# Build files
-frontend/build/
-frontend/.next/
 
 # IDE & Editor files
 .vscode/
