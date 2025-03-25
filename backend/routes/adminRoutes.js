@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
-const { getUsers, getOrders, getPayments } = require('../controllers/adminController');
+const { getUsers, getOrders, getPayments, getAdminStats } = require('../controllers/adminController'); // ✅ Import Stats Controller
 
 const router = express.Router();
 
@@ -12,5 +12,8 @@ router.get('/orders', authMiddleware, adminMiddleware, getOrders);
 
 // Get all payments (Admin Only)
 router.get('/payments', authMiddleware, adminMiddleware, getPayments);
+
+// ✅ Get Admin Stats
+router.get('/stats', authMiddleware, adminMiddleware, getAdminStats);
 
 module.exports = router;

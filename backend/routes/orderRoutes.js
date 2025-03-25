@@ -1,13 +1,17 @@
 const express = require('express');
 const db = require('../config/db');
-const { authMiddleware } = require('../middleware/authMiddleware'); // ✅ Fix Import
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 // Place an order
-router.post('/place', authMiddleware, (req, res) => { // ✅ Correct Middleware Usage
+router.post('/place', authMiddleware, (req, res) => {
     const { cartItems, totalPrice, address } = req.body;
     const user_id = req.user.id;
+
+    if (!cartItems || cartItems.length === 0) {
+        return res.status(400).json({ error: "Cart is empty" });
+    }
 
     db.query(
         "INSERT INTO orders (user_id, total_price, address) VALUES (?, ?, ?)",
@@ -16,22 +20,20 @@ router.post('/place', authMiddleware, (req, res) => { // ✅ Correct Middleware 
             if (err) return res.status(500).json({ error: err.message });
 
             const order_id = result.insertId;
+            const values = cartItems.map(item => [order_id, item.product_id, item.quantity]);
 
-            // Insert order items
-            cartItems.forEach(item => {
-                db.query(
-                    "INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)",
-                    [order_id, item.product_id, item.quantity]
-                );
+            const insertOrderItemsQuery = "INSERT INTO order_items (order_id, product_id, quantity) VALUES ?";
+            db.query(insertOrderItemsQuery, [values], (err2) => {
+                if (err2) return res.status(500).json({ error: err2.message });
+
+                res.json({ message: "Order placed successfully!", order_id });
             });
-
-            res.json({ message: "Order placed successfully!", order_id });
         }
     );
 });
 
 // Get user orders
-router.get('/', authMiddleware, (req, res) => { // ✅ Correct Middleware Usage
+router.get('/', authMiddleware, (req, res) => {
     const user_id = req.user.id;
 
     db.query(

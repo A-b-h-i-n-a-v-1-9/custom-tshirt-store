@@ -13,21 +13,18 @@ router.get('/', (req, res) => {
 });
 
 // Add new product (Admin only)
-router.post('/', authMiddleware, adminMiddleware, (req, res) => { // ✅ Use both middlewares properly
-    const { name, description, price, image } = req.body;
+router.post('/add', (req, res) => {
+    const { name, description, category, price, image, stock } = req.body;
 
-    if (!name || !price) {
-        return res.status(400).json({ error: "Name and price are required." });
+    if (!name || !price || !category || !stock) {
+        return res.status(400).json({ error: "All fields are required" });
     }
 
-    db.query(
-        "INSERT INTO products (name, description, price, image) VALUES (?, ?, ?, ?)",
-        [name, description, price, image],
-        (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: "Product added successfully!" });
-        }
-    );
+    const sql = "INSERT INTO products (name, description, category, price, image, stock) VALUES (?, ?, ?, ?, ?, ?)";
+    db.query(sql, [name, description, category, price, image, stock], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Product added successfully!", product_id: result.insertId });
+    });
 });
 
 module.exports = router;

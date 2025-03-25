@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const cors = require('cors');
 const dotenv = require('dotenv');
 const db = require('./config/db');
@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -38,14 +39,22 @@ db.getConnection((err, connection) => {
     }
 });
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/payments', paymentRoutes);
 
+// Root Route
 app.get('/', (req, res) => res.send('🛒 T-Shirt Store API Running...'));
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error("🔥 Server Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+});
 
 // Start Server
 const PORT = process.env.PORT || 5000;
