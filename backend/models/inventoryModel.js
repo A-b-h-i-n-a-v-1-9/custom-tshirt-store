@@ -6,28 +6,38 @@ exports.reduceStock = (productType, productId, quantity, callback) => {
         if (err) return callback(err, null);
 
         connection.beginTransaction(err => {
-            if (err) return callback(err, null);
+            if (err) {
+                connection.release();
+                return callback(err, null);
+            }
 
             // Reduce stock from the inventory
             connection.query(
                 'UPDATE inventory SET quantity = quantity - ? WHERE id = ? AND quantity >= ?',
                 [quantity, productId, quantity],
                 (err, result) => {
-                    if (err) return connection.rollback(() => callback(err, null));
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback(err, null);
+                        });
+                    }
 
                     if (result.affectedRows === 0) {
-                        return connection.rollback(() => callback("Not enough stock available", null));
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback("Not enough stock available", null);
+                        });
                     }
 
                     connection.commit(err => {
+                        connection.release();
                         if (err) return callback(err, null);
                         callback(null, { message: "Stock updated successfully!" });
                     });
                 }
             );
         });
-
-        connection.release();
     });
 };
 
@@ -39,13 +49,21 @@ exports.addTShirt = (tshirtData, callback) => {
         if (err) return callback(err, null);
 
         connection.beginTransaction(err => {
-            if (err) return callback(err, null);
+            if (err) {
+                connection.release();
+                return callback(err, null);
+            }
 
             connection.query(
                 'INSERT INTO inventory (type, quantity) VALUES (?, ?)',
                 ['tshirt', quantity],
                 (err, result) => {
-                    if (err) return connection.rollback(() => callback(err, null));
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback(err, null);
+                        });
+                    }
 
                     const inventoryId = result.insertId;
 
@@ -53,9 +71,15 @@ exports.addTShirt = (tshirtData, callback) => {
                         'INSERT INTO t_shirts (inventory_id, size, material, price, color) VALUES (?, ?, ?, ?, ?)',
                         [inventoryId, size, material, price, color],
                         (err) => {
-                            if (err) return connection.rollback(() => callback(err, null));
+                            if (err) {
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    callback(err, null);
+                                });
+                            }
 
                             connection.commit(err => {
+                                connection.release();
                                 if (err) return callback(err, null);
                                 callback(null, { message: "T-Shirt added successfully!" });
                             });
@@ -64,8 +88,6 @@ exports.addTShirt = (tshirtData, callback) => {
                 }
             );
         });
-
-        connection.release();
     });
 };
 
@@ -77,13 +99,21 @@ exports.addMug = (mugData, callback) => {
         if (err) return callback(err, null);
 
         connection.beginTransaction(err => {
-            if (err) return callback(err, null);
+            if (err) {
+                connection.release();
+                return callback(err, null);
+            }
 
             connection.query(
                 'INSERT INTO inventory (type, quantity) VALUES (?, ?)',
                 ['mug', quantity],
                 (err, result) => {
-                    if (err) return connection.rollback(() => callback(err, null));
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback(err, null);
+                        });
+                    }
 
                     const inventoryId = result.insertId;
 
@@ -91,9 +121,15 @@ exports.addMug = (mugData, callback) => {
                         'INSERT INTO mugs (inventory_id, size, price, color) VALUES (?, ?, ?, ?)',
                         [inventoryId, size, price, color],
                         (err) => {
-                            if (err) return connection.rollback(() => callback(err, null));
+                            if (err) {
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    callback(err, null);
+                                });
+                            }
 
                             connection.commit(err => {
+                                connection.release();
                                 if (err) return callback(err, null);
                                 callback(null, { message: "Mug added successfully!" });
                             });
@@ -102,8 +138,6 @@ exports.addMug = (mugData, callback) => {
                 }
             );
         });
-
-        connection.release();
     });
 };
 
@@ -115,13 +149,21 @@ exports.addBottle = (bottleData, callback) => {
         if (err) return callback(err, null);
 
         connection.beginTransaction(err => {
-            if (err) return callback(err, null);
+            if (err) {
+                connection.release();
+                return callback(err, null);
+            }
 
             connection.query(
                 'INSERT INTO inventory (type, quantity) VALUES (?, ?)',
                 ['bottle', quantity],
                 (err, result) => {
-                    if (err) return connection.rollback(() => callback(err, null));
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback(err, null);
+                        });
+                    }
 
                     const inventoryId = result.insertId;
 
@@ -129,9 +171,15 @@ exports.addBottle = (bottleData, callback) => {
                         'INSERT INTO bottles (inventory_id, size_ml, material, price, color) VALUES (?, ?, ?, ?, ?)',
                         [inventoryId, size_ml, material, price, color],
                         (err) => {
-                            if (err) return connection.rollback(() => callback(err, null));
+                            if (err) {
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    callback(err, null);
+                                });
+                            }
 
                             connection.commit(err => {
+                                connection.release();
                                 if (err) return callback(err, null);
                                 callback(null, { message: "Bottle added successfully!" });
                             });
@@ -140,7 +188,5 @@ exports.addBottle = (bottleData, callback) => {
                 }
             );
         });
-
-        connection.release();
     });
 };

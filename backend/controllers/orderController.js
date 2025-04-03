@@ -18,10 +18,12 @@ exports.placeOrder = async (req, res) => {
         const [orderResult] = await connection.execute(orderQuery, [userId, paymentMethod]);
 
         const orderId = orderResult.insertId;
+        let totalPrice = 0;
 
         // Insert order items & reduce inventory
         for (const item of items) {
             const { productId, quantity, price, productType } = item;
+            totalPrice += quantity * parseFloat(price);
 
             await connection.execute(
                 "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)",
@@ -41,12 +43,27 @@ exports.placeOrder = async (req, res) => {
                 return res.status(400).json({ error: "Not enough stock available" });
             }
         }
+        console.log("✅ Order placed. Order ID:", orderId);
+console.log("💰 Preparing to insert payment record:", {
+    orderId,
+    totalPrice,
+    paymentMethod,
+    status: paymentMethod === "COD" ? "pending" : "completed",
+});
+
+
+        // ✅ Insert payment record
+        await connection.execute(
+            "INSERT INTO payments (order_id, amount, payment_method, payment_status) VALUES (?, ?, ?, ?)",
+            [orderId, totalPrice, paymentMethod, paymentMethod === "COD" ? "pending" : "completed"]
+        );
 
         await connection.commit();
-        res.status(200).json({ message: "Order placed successfully!" });
+        res.status(200).json({ message: "Order placed successfully!", orderId });
+
     } catch (err) {
         await connection.rollback();
-        console.error(err);
+        console.error("🔥 Order Placement Failed:", err);
         res.status(500).json({ error: "Failed to place order" });
     } finally {
         connection.release();

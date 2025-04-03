@@ -1,28 +1,29 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token)
-    return res.status(401).json({ error: "Access Denied. No token provided." });
+  const token = req.cookies.authToken; // ✅ Read token from cookies
+
+  if (!token) {
+    return res.status(401).json({ error: "Access Denied. No token provided." }); // Fix here: Ensure you're returning JSON
+  }
 
   try {
-    const verified = jwt.verify(
-      token.replace("Bearer ", ""),
-      process.env.JWT_SECRET
-    );
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Invalid or expired token." });
+    return res.status(401).json({ error: "Invalid or expired token." }); // Fix here: Ensure you're returning JSON
   }
 };
 
 const adminMiddleware = (req, res, next) => {
-  if (!req.user || req.user.role !== "admin") {
-    return res.status(403).json({ error: "Admin Access Required." });
+  if (req.user && req.user.role === "admin") {  
+      next();
+  } else {
+      return res.status(403).json({ message: "Forbidden: Admins only!" });
   }
-  next();
 };
+
 
 const generateAccessToken = (user) => {
   return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
