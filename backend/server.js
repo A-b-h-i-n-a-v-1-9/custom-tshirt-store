@@ -18,12 +18,29 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser()); // ✅ Enable cookie parsing
+
+// Allow both localhost and any ngrok subdomain
+const allowedOrigins = [
+    "http://localhost:3000"
+];
+
 app.use(
     cors({
-      origin: "http://localhost:3000", // ✅ Allow frontend origin
+      origin: (origin, callback) => {
+          if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".ngrok-free.app")) {
+              callback(null, true);
+          } else {
+              callback(new Error("Not allowed by CORS"));
+          }
+      },
       credentials: true, // ✅ Allow cookies & auth headers
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
     })
 );
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Check if essential environment variables are set
 if (!process.env.JWT_SECRET) {

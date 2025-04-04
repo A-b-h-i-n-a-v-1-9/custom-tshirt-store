@@ -50,7 +50,7 @@ const Navbar = ({ searchQuery, setSearchQuery, filters, setFilters }) => {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-white tracking-wide">
-          CustomWear
+          Print Genie
         </Link>
 
         {/* Navigation Links */}
@@ -58,7 +58,7 @@ const Navbar = ({ searchQuery, setSearchQuery, filters, setFilters }) => {
           <Link to="/" className="text-white hover:text-blue-300 transition">Home</Link>
           <Link to="/products" className="text-white hover:text-blue-300 transition">Shop</Link>
           <Link to="/customize" className="text-white hover:text-blue-300 transition">Customize</Link>
-          <Link to="/contact" className="text-white hover:text-blue-300 transition">Contact</Link>
+          <Link to="/profile" className="text-white hover:text-blue-300 transition">Profile</Link>
         </div>
 
         {/* Search & Filter */}

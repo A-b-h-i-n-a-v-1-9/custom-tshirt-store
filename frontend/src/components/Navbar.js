@@ -28,7 +28,7 @@ const Navbar = () => {
         
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold tracking-wide text-white">
-          CustomWear
+          Print Genie
         </Link>
 
         {/* Navigation Links */}
