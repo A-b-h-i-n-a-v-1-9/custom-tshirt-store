@@ -2,6 +2,7 @@ const express = require('express');
 const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 const { getUsers, getOrders, getPayments, getAdminStats } = require('../controllers/adminController');
 
+
 const router = express.Router();
 
 // Get all users (Admin Only)
