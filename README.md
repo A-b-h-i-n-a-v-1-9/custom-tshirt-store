@@ -37,12 +37,7 @@ custom-tshirt-store/
 │   │   ├── dotenv.js      # Load environment variables
 │   │
 │   ├── 📂 models/         # MySQL tables (ORM)
-│   │   ├── UserModel.js   
-│   │   ├── ProductModel.js
-│   │   ├── CartModel.js   
-│   │   ├── OrderModel.js  
-│   │   ├── PaymentModel.js  
-│   │   ├── CustomDesignModel.js  
+│   │   ├── inventoryModel.js 
 │   │
 │   ├── 📂 routes/         # API routes
 │   │   ├── authRoutes.js  
