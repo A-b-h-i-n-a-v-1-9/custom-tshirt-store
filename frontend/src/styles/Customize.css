@@ -1,0 +1,29 @@
+.customize-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .customize-container input {
+    margin-top: 10px;
+  }
+  
+  .preview-image {
+    margin-top: 20px;
+    max-width: 300px;
+    border: 2px solid #ddd;
+  }
+  
+  .customize-container button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .customize-container button:hover {
+    background-color: #45a049;
+  }
+  
