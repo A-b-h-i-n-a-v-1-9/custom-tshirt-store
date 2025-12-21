@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/custom-tshirt-store/static/css/main.cfa41aa2.css",
-    "main.js": "/custom-tshirt-store/static/js/main.76ec8d25.js",
+    "main.js": "/custom-tshirt-store/static/js/main.bff876e7.js",
     "static/js/453.d855a71b.chunk.js": "/custom-tshirt-store/static/js/453.d855a71b.chunk.js",
     "static/media/hero-image.jpg": "/custom-tshirt-store/static/media/hero-image.ecc070f895da6dd7aa5f.jpg",
     "static/media/cart-bg.jpg": "/custom-tshirt-store/static/media/cart-bg.d70a09e3dce21f34ba8e.jpg",
     "index.html": "/custom-tshirt-store/index.html",
     "main.cfa41aa2.css.map": "/custom-tshirt-store/static/css/main.cfa41aa2.css.map",
-    "main.76ec8d25.js.map": "/custom-tshirt-store/static/js/main.76ec8d25.js.map",
+    "main.bff876e7.js.map": "/custom-tshirt-store/static/js/main.bff876e7.js.map",
     "453.d855a71b.chunk.js.map": "/custom-tshirt-store/static/js/453.d855a71b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cfa41aa2.css",
-    "static/js/main.76ec8d25.js"
+    "static/js/main.bff876e7.js"
   ]
 }
